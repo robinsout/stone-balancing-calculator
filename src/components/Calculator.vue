@@ -76,7 +76,7 @@
               </option>
               <option
                 v-for="condition, index in conditions"
-                :key="condition.value*index"
+                :key="`condition.value-${index}`"
                 :value="condition.value"
               >
                 {{ condition.description }}
@@ -95,6 +95,7 @@
                 type="radio"
                 class="calculator__inputs__contribution-option__radio-button"
                 name="contribution"
+                :checked="contributionType === 'money-contribution'"
               >
               <label for="money">
                 Деньгами,
@@ -102,6 +103,7 @@
                   v-model="money"
                   type="number"
                   placeholder="введите сумму"
+                  @click="contributionType = 'money-contribution'"
                 > евро.
               </label>
             </div>
@@ -113,6 +115,7 @@
                 type="radio"
                 class="calculator__inputs__contribution-option__radio-button"
                 name="contribution"
+                :checked="contributionType === 'labour-contribution'"
               >
               <label for="labour">
                 Трудом, могу помогать
@@ -120,6 +123,7 @@
                   v-model="labourHours"
                   type="number"
                   placeholder="введите количество"
+                  @click="contributionType = 'labour-contribution'"
                 >
                 часов в день, а именно:
               </label>
@@ -143,6 +147,7 @@
                 type="radio"
                 class="calculator__inputs__contribution-option__radio-button"
                 name="contribution"
+                :checked="contributionType === 'art-contribution'"
               >
               <label for="art">
                 Культурой и искусством*:
@@ -151,49 +156,33 @@
             <div class="calculator__inputs__contribution-option__list">
               <div class="calculator__inputs__contribution-option__culture-art__wrapper">
                 <div class="calculator__inputs__contribution-option__culture-art">
-                  <input
-                    id="artGift"
-                    type="radio"
-                    class="calculator__inputs__contribution-option__radio-button"
-                    name="contribution"
+                  <select
+                    id="artContribution"
+                    v-model="activeArtContributionType"
+                    class="calculator__inputs_input"
+                    @change="contributionType='art-contribution'"
                   >
-                  <label for="artGift">
-                    передам в дар произведение стоимостью в <input
-                      v-model="artContribution.masterpieceGift"
-                      type="number"
-                      placeholder="введите сумму"
-                    > евро
-                  </label>
-                </div>
-                <div class="calculator__inputs__contribution-option__culture-art">
+                    <option
+                      :value="0"
+                      disabled
+                      selected
+                    >
+                      Выберите условия размещения
+                    </option>
+                    <option
+                      v-for="contributionOption, index in artContributionOptions"
+                      :key="`contributionOption-${index}`"
+                      :value="contributionOption"
+                    >
+                      {{ contributionOption }}
+                    </option>
+                  </select>
                   <input
-                    id="productionGift"
-                    type="radio"
-                    class="calculator__inputs__contribution-option__radio-button"
-                    name="contribution"
-                  >
-                  <label for="productionGift">
-                    подарю продукцию на сумму <input
-                      v-model="artContribution.production"
-                      type="number"
-                      placeholder="введите сумму"
-                    > евро
-                  </label>
-                </div>
-                <div class="calculator__inputs__contribution-option__culture-art">
-                  <input
-                    id="venue"
-                    type="radio"
-                    class="calculator__inputs__contribution-option__radio-button"
-                    name="contribution"
-                  >
-                  <label for="venue">
-                    проведу публичное мероприятие на <input
-                      v-model="artContribution.venue"
-                      type="number"
-                      placeholder="введите сумму"
-                    > евро
-                  </label>
+                    v-model="artContributionValue"
+                    type="number"
+                    placeholder="введите сумму"
+                    @click="contributionType='art-contribution'"
+                  > евро
                 </div>
               </div>
             </div>

@@ -43,6 +43,9 @@
 
           &__culture-art {
             margin-bottom: 10px;
+            display: inline-flex;
+            flex-direction: row;
+            gap: 12px;
 
             &__wrapper {
               margin-top: 14px;
