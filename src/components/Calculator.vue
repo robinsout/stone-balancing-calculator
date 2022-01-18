@@ -39,8 +39,9 @@
           </h3>
           <input
             id="days"
+            v-model="days"
             class="calculator__inputs_input"
-            type="text"
+            type="number"
             placeholder="Количество дней"
           >
         </div>
@@ -50,8 +51,9 @@
           </h3>
           <input
             id="persons"
+            v-model="persons"
             class="calculator__inputs_input"
-            type="text"
+            type="number"
             placeholder="Количество персон"
           >
         </div>
@@ -59,25 +61,28 @@
           <h3 class="calculator__inputs__block-title">
             Какие условия размещения вас устроят?
           </h3>
-          <select
-            id="conditions"
-            class="calculator__inputs_input"
-          >
-            <option
-              value=""
-              disabled
-              selected
+          <div>
+            <select
+              id="conditions"
+              v-model="conditionsValue"
+              class="calculator__inputs_input"
             >
-              Выберите условия размещения
-            </option>
-            <option
-              v-for="condition, index in conditions"
-              :key="index"
-              :value="condition.value"
-            >
-              {{ condition.description }}
-            </option>
-          </select>
+              <option
+                :value="0"
+                disabled
+                selected
+              >
+                Выберите условия размещения
+              </option>
+              <option
+                v-for="condition, index in conditions"
+                :key="condition.value*index"
+                :value="condition.value"
+              >
+                {{ condition.description }}
+              </option>
+            </select>
+          </div>
         </div>
         <div class="calculator__inputs__block">
           <h3 class="calculator__inputs__block-title">
@@ -94,6 +99,7 @@
               <label for="money">
                 Деньгами,
                 <input
+                  v-model="money"
                   type="number"
                   placeholder="введите сумму"
                 > евро.
@@ -111,8 +117,9 @@
               <label for="labour">
                 Трудом, могу помогать
                 <input
+                  v-model="labourHours"
                   type="number"
-                  placeholder="введите сумму"
+                  placeholder="введите количество"
                 >
                 часов в день, а именно:
               </label>
@@ -141,21 +148,55 @@
                 Культурой и искусством*:
               </label>
             </div>
-            <ul class="calculator__inputs__contribution-option__list">
-              <li>передам в дар произведение стоимостью в А евро</li>
-              <li>
-                подарю продукцию на сумму <input
-                  type="text"
-                  placeholder="введите сумму"
-                > евро
-              </li>
-              <li>
-                проведу публичное мероприятие на <input
-                  type="text"
-                  placeholder="введите сумму"
-                > евро
-              </li>
-            </ul>
+            <div class="calculator__inputs__contribution-option__list">
+              <div class="calculator__inputs__contribution-option__culture-art__wrapper">
+                <div class="calculator__inputs__contribution-option__culture-art">
+                  <input
+                    id="artGift"
+                    type="radio"
+                    class="calculator__inputs__contribution-option__radio-button"
+                    name="contribution"
+                  >
+                  <label for="artGift">
+                    передам в дар произведение стоимостью в <input
+                      v-model="artContribution.masterpieceGift"
+                      type="number"
+                      placeholder="введите сумму"
+                    > евро
+                  </label>
+                </div>
+                <div class="calculator__inputs__contribution-option__culture-art">
+                  <input
+                    id="productionGift"
+                    type="radio"
+                    class="calculator__inputs__contribution-option__radio-button"
+                    name="contribution"
+                  >
+                  <label for="productionGift">
+                    подарю продукцию на сумму <input
+                      v-model="artContribution.production"
+                      type="number"
+                      placeholder="введите сумму"
+                    > евро
+                  </label>
+                </div>
+                <div class="calculator__inputs__contribution-option__culture-art">
+                  <input
+                    id="venue"
+                    type="radio"
+                    class="calculator__inputs__contribution-option__radio-button"
+                    name="contribution"
+                  >
+                  <label for="venue">
+                    проведу публичное мероприятие на <input
+                      v-model="artContribution.venue"
+                      type="number"
+                      placeholder="введите сумму"
+                    > евро
+                  </label>
+                </div>
+              </div>
+            </div>
             <p>
               <i>
                 * Мы включаем в расчет риски и расходы.
@@ -165,33 +206,33 @@
                 и организацией продажи произведения. Поэтому произведение в 300 евро это 10 пьетр.  
               </i>
             </p>
-          </div>
-        </div>
-        <div class="calculator__inputs__block">
-          <h3 class="calculator__inputs__block-title">
-            Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
-          </h3>
-          <div class="calculator__inputs__daily-contribution-option">
-            <input
-              id="acceptDailyContribution"
-              type="radio"
-              class="calculator__inputs__contribution-option__radio-button"
-              name="dailyContribution"
-            >
-            <label for="acceptDailyContribution">
-              Не проблема, внесу наличными в день приезда 20ND за весь период
-            </label>
-          </div>
-          <div class="calculator__inputs__daily-contribution-option">
-            <input
-              id="declineDailyContribution"
-              type="radio"
-              class="calculator__inputs__contribution-option__radio-button"
-              name="dailyContribution"
-            >
-            <label for="declineDailyContribution">
-              У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
-            </label>
+            <div class="calculator__inputs__block">
+              <h3 class="calculator__inputs__block-title">
+                Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
+              </h3>
+              <div class="calculator__inputs__daily-contribution-option">
+                <input
+                  id="acceptDailyContribution"
+                  type="radio"
+                  class="calculator__inputs__contribution-option__radio-button"
+                  name="dailyContribution"
+                >
+                <label for="acceptDailyContribution">
+                  Не проблема, внесу наличными в день приезда <strong>{{ 20*persons*days }} евро</strong> за весь период
+                </label>
+              </div>
+              <div class="calculator__inputs__daily-contribution-option">
+                <input
+                  id="declineDailyContribution"
+                  type="radio"
+                  class="calculator__inputs__contribution-option__radio-button"
+                  name="dailyContribution"
+                >
+                <label for="declineDailyContribution">
+                  У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -199,82 +240,5 @@
   </div>
 </template>
 
-<script>
-import { reactive } from "vue";
-import { conditions } from './conditions'
-
-export default {
-  name: 'HelloWorld',
-  setup() {
-
-    return {
-      conditions
-    }
-  }
-}
-</script>
-
-<style scoped lang="scss">
-.page-wrapper { 
-  display: flex;
-  justify-content: center;
-
-  .calculator {
-    max-width: 900px;
-
-    &__content-block {
-      margin-bottom: 28px;
-    }
-
-    &__inputs {
-
-      &__block {
-        margin-bottom: 14px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-
-        &-title {
-          margin-bottom: 10px;
-        }
-      }
-
-      &_label {
-        margin-bottom: 8px;
-      }
-
-      &_input {
-        display: block;
-      }
-
-      &__contribution-option {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 14px;
-
-        &__list {
-          margin-left: 42px;
-        }
-      }
-
-      &__daily-contribution-option {
-        margin-bottom: 10px;
-      }
-    }
-  }
-}
-
-p {
-  text-align: justify;
-}
-
-li {
-  text-align: left;
-  margin: 4px 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+<script src="./Calculator.js" />
+<style scoped lang="scss" src="./Calculator.scss" />
