@@ -163,11 +163,11 @@
                     @change="contributionType='art-contribution'"
                   >
                     <option
-                      :value="0"
+                      :value="''"
                       disabled
                       selected
                     >
-                      Выберите условия размещения
+                      выберите вариант помощи
                     </option>
                     <option
                       v-for="contributionOption, index in artContributionOptions"
@@ -177,7 +177,7 @@
                       {{ contributionOption }}
                     </option>
                   </select>
-                  <input
+                  на сумму <input
                     v-model="artContributionValue"
                     type="number"
                     placeholder="введите сумму"
@@ -195,7 +195,10 @@
                 и организацией продажи произведения. Поэтому произведение в 300 евро это 10 пьетр.  
               </i>
             </p>
-            <div class="calculator__inputs__block">
+            <div
+              v-if="days && persons"
+              class="calculator__inputs__block"
+            >
               <h3 class="calculator__inputs__block-title">
                 Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
               </h3>

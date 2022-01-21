@@ -1,13 +1,9 @@
-import { defineComponent, reactive, ref, watch } from "vue";
-import { conditions } from './conditions'
+import { defineComponent, ref } from "vue";
+import { conditions, artContributionOptions } from './selectOptions'
 
 export default defineComponent({
   name: 'StoneBalancingCalculator',
   setup() {
-
-    const artContributionOptions = [
-      'передам в дар произведение стоимостью', 'подарю продукцию на сумму', 'проведу публичное мероприятие'
-    ];
 
     const days = ref();
     const persons = ref();
