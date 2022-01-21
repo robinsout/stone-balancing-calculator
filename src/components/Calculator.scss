@@ -57,7 +57,19 @@
           margin-bottom: 10px;
         }
       }
+
+      &__contribution-options-list {
+        padding-left: 0;        
+      }
     }
+  }
+
+  .error {
+    background-color: pink;
+  }
+
+  .green {
+    background-color: lightgreen;
   }
   
   p {

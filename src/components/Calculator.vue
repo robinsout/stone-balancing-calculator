@@ -41,6 +41,7 @@
             id="days"
             v-model="days"
             class="calculator__inputs_input"
+            :class="{error: !days}"
             type="number"
             placeholder="Количество дней"
           >
@@ -53,6 +54,7 @@
             id="persons"
             v-model="persons"
             class="calculator__inputs_input"
+            :class="{error: !persons}"
             type="number"
             placeholder="Количество персон"
           >
@@ -66,6 +68,7 @@
               id="conditions"
               v-model="conditionsValue"
               class="calculator__inputs_input"
+              :class="{error: !conditionsValue}"
             >
               <option
                 :value="0"
@@ -88,143 +91,154 @@
           <h3 class="calculator__inputs__block-title">
             Как вы готовы помочь проекту?
           </h3>
-          <div class="calculator__inputs__contribution-option">
-            <div>
-              <input
-                id="money"
-                type="radio"
-                class="calculator__inputs__contribution-option__radio-button"
-                name="contribution"
-                :checked="contributionType === 'money-contribution'"
-              >
+          <ul class="calculator__contribution-options-list">
+            <li class="calculator__inputs__contribution-option">
               <label for="money">
                 Деньгами,
                 <input
                   v-model="money"
                   type="number"
                   placeholder="введите сумму"
-                  @click="contributionType = 'money-contribution'"
                 > евро.
               </label>
-            </div>
-          </div>
-          <div class="calculator__inputs__contribution-option">
-            <div>
-              <input
-                id="labour"
-                type="radio"
-                class="calculator__inputs__contribution-option__radio-button"
-                name="contribution"
-                :checked="contributionType === 'labour-contribution'"
-              >
+            </li>
+            <li class="calculator__inputs__contribution-option">
               <label for="labour">
                 Трудом, могу помогать
                 <input
                   v-model="labourHours"
                   type="number"
                   placeholder="введите количество"
-                  @click="contributionType = 'labour-contribution'"
                 >
                 часов в день, а именно:
               </label>
-            </div>
-            <ul class="calculator__inputs__contribution-option__list">
-              <li>мыть посуду</li>
-              <li>убирать территорию</li>
-              <li>колоть дрова</li>
-              <li>пилить деревья</li>
-              <li>возделывать огород</li>
-              <li>ухаживать за растениями</li>
-              <li>помогать с ремонтом</li>
-              <li>готовить</li>
-              <li>шить</li>
-            </ul>
-          </div>
-          <div class="calculator__inputs__contribution-option">
-            <div>
-              <input
-                id="art"
-                type="radio"
-                class="calculator__inputs__contribution-option__radio-button"
-                name="contribution"
-                :checked="contributionType === 'art-contribution'"
-              >
-              <label for="art">
+              <ul class="calculator__inputs__contribution-option__list">
+                <li>мыть посуду</li>
+                <li>убирать территорию</li>
+                <li>колоть дрова</li>
+                <li>пилить деревья</li>
+                <li>возделывать огород</li>
+                <li>ухаживать за растениями</li>
+                <li>помогать с ремонтом</li>
+                <li>готовить</li>
+                <li>шить</li>
+              </ul>
+            </li>
+            <li class="calculator__inputs__contribution-option">
+              <label>
                 Культурой и искусством*:
               </label>
-            </div>
-            <div class="calculator__inputs__contribution-option__list">
-              <div class="calculator__inputs__contribution-option__culture-art__wrapper">
-                <div class="calculator__inputs__contribution-option__culture-art">
-                  <select
-                    id="artContribution"
-                    v-model="activeArtContributionType"
-                    class="calculator__inputs_input"
-                    @change="contributionType='art-contribution'"
-                  >
-                    <option
-                      :value="''"
-                      disabled
-                      selected
+              <div class="calculator__inputs__contribution-option__list">
+                <div class="calculator__inputs__contribution-option__culture-art__wrapper">
+                  <div class="calculator__inputs__contribution-option__culture-art">
+                    <select
+                      id="artContribution"
+                      v-model="activeArtContributionType"
+                      class="calculator__inputs_input"
+                      :class="{'error': !activeArtContributionType && !!artContributionValue}"
                     >
-                      выберите вариант помощи
-                    </option>
-                    <option
-                      v-for="contributionOption, index in artContributionOptions"
-                      :key="`contributionOption-${index}`"
-                      :value="contributionOption"
-                    >
-                      {{ contributionOption }}
-                    </option>
-                  </select>
-                  на сумму <input
-                    v-model="artContributionValue"
-                    type="number"
-                    placeholder="введите сумму"
-                    @click="contributionType='art-contribution'"
-                  > евро
+                      <option
+                        :value="''"
+                        disabled
+                        selected
+                      >
+                        выберите вариант помощи
+                      </option>
+                      <option
+                        v-for="contributionOption, index in artContributionOptions"
+                        :key="`contributionOption-${index}`"
+                        :value="contributionOption"
+                      >
+                        {{ contributionOption }}
+                      </option>
+                    </select>
+                    на сумму <input
+                      v-model="artContributionValue"
+                      type="number"
+                      placeholder="введите сумму"
+                      :class="{'error': !!activeArtContributionType && !artContributionValue}"
+                    > евро
+                  </div>
                 </div>
               </div>
+              <p>
+                <i>
+                  * Мы включаем в расчет риски и расходы.
+                  К примеру, вы называете рыночную стоимость произведения, скажем 300 евро.
+                  Нет гарантии, что нам однажды удастся его продать. А в случае продажи нам
+                  придется отдать часть суммы на налоги и понести расходы, связанные с хранением
+                  и организацией продажи произведения. Поэтому произведение в 300 евро это 10 пьетр.  
+                </i>
+              </p>
+              <div
+                v-if="days && persons"
+                class="calculator__inputs__block"
+              >
+                <h3
+                  class="calculator__inputs__block-title"
+                  :class="{error: isOkayWithDailyContribution === null}"
+                >
+                  Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
+                </h3>
+                <div class="calculator__inputs__daily-contribution-option">
+                  <input
+                    id="acceptDailyContribution"
+                    v-model="isOkayWithDailyContribution"
+                    type="radio"
+                    class="calculator__inputs__contribution-option__radio-button"
+                    name="dailyContribution"
+                    :value="true"
+                  >
+                  <label for="acceptDailyContribution">
+                    Не проблема, внесу наличными в день приезда <strong>{{ 20*persons*days }} евро</strong> за весь период
+                  </label>
+                </div>
+                <div class="calculator__inputs__daily-contribution-option">
+                  <input
+                    id="declineDailyContribution"
+                    v-model="isOkayWithDailyContribution"
+                    type="radio"
+                    class="calculator__inputs__contribution-option__radio-button"
+                    name="dailyContribution"
+                    :value="false"
+                  >
+                  <label for="declineDailyContribution">
+                    У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
+                  </label>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div
+            class="calculator__inputs__block"
+          >
+            <div>
+              <b>
+                <label fpr="result">
+                  Вот такой вот результат:
+                </label>
+                <p
+                  v-if="!!getCalculationResult() && getCalculationResult() !== NaN && getCalculationResult() !== 'NaN' && isOkayWithDailyContribution !== null"
+                  id="result"
+                  :class="{
+                    error: getCalculationResult() < 0,
+                    green: getCalculationResult() >= 0
+                  }"
+                >
+                  {{ Math.abs(getCalculationResult()) }}
+                </p>
+                <p
+                  v-else
+                  id="result"
+                >Заполните обязательные поля</p>
+              </b>
             </div>
             <p>
               <i>
-                * Мы включаем в расчет риски и расходы.
-                К примеру, вы называете рыночную стоимость произведения, скажем 300 евро.
-                Нет гарантии, что нам однажды удастся его продать. А в случае продажи нам
-                придется отдать часть суммы на налоги и понести расходы, связанные с хранением
-                и организацией продажи произведения. Поэтому произведение в 300 евро это 10 пьетр.  
+                Если здесь меньше нуля — значит пьетр хватает, если больше — значит не хватает.<br>
+                Потом сделаем правильную надпись, сейчас пока оставил так, чтобы ты смог проверить.
               </i>
             </p>
-            <div
-              v-if="days && persons"
-              class="calculator__inputs__block"
-            >
-              <h3 class="calculator__inputs__block-title">
-                Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
-              </h3>
-              <div class="calculator__inputs__daily-contribution-option">
-                <input
-                  id="acceptDailyContribution"
-                  type="radio"
-                  class="calculator__inputs__contribution-option__radio-button"
-                  name="dailyContribution"
-                >
-                <label for="acceptDailyContribution">
-                  Не проблема, внесу наличными в день приезда <strong>{{ 20*persons*days }} евро</strong> за весь период
-                </label>
-              </div>
-              <div class="calculator__inputs__daily-contribution-option">
-                <input
-                  id="declineDailyContribution"
-                  type="radio"
-                  class="calculator__inputs__contribution-option__radio-button"
-                  name="dailyContribution"
-                >
-                <label for="declineDailyContribution">
-                  У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
-                </label>
-              </div>
-            </div>
           </div>
         </div>
       </div>
