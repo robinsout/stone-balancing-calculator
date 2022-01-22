@@ -40,7 +40,7 @@
           <input
             id="days"
             v-model="days"
-            class="calculator__inputs_input"
+            class="calculator__inputs_input input-window"
             :class="{error: !days}"
             type="number"
             placeholder="Количество дней"
@@ -53,7 +53,7 @@
           <input
             id="persons"
             v-model="persons"
-            class="calculator__inputs_input"
+            class="calculator__inputs_input input-window"
             :class="{error: !persons}"
             type="number"
             placeholder="Количество персон"
@@ -67,7 +67,7 @@
             <select
               id="conditions"
               v-model="conditionsValue"
-              class="calculator__inputs_input"
+              class="calculator__inputs_input input-window"
               :class="{error: !conditionsValue}"
             >
               <option
@@ -93,20 +93,22 @@
           </h3>
           <ul class="calculator__contribution-options-list">
             <li class="calculator__inputs__contribution-option">
-              <label for="money">
-                Деньгами,
+              <label class="calculator__inputs__contribution-option__title">
+                💰 Деньгами,
                 <input
                   v-model="money"
+                  class="input-window"
                   type="number"
                   placeholder="введите сумму"
                 > евро.
               </label>
             </li>
             <li class="calculator__inputs__contribution-option">
-              <label for="labour">
-                Трудом, могу помогать
+              <label class="calculator__inputs__contribution-option__title">
+                ⛏️ Трудом, могу помогать
                 <input
                   v-model="labourHours"
+                  class="input-window"
                   type="number"
                   placeholder="введите количество"
                 >
@@ -125,8 +127,8 @@
               </ul>
             </li>
             <li class="calculator__inputs__contribution-option">
-              <label>
-                Культурой и искусством*:
+              <label class="calculator__inputs__contribution-option__title">
+                🎨 Культурой и искусством*:
               </label>
               <div class="calculator__inputs__contribution-option__list">
                 <div class="calculator__inputs__contribution-option__culture-art__wrapper">
@@ -134,7 +136,7 @@
                     <select
                       id="artContribution"
                       v-model="activeArtContributionType"
-                      class="calculator__inputs_input"
+                      class="calculator__inputs_input input-window"
                       :class="{'error': !activeArtContributionType && !!artContributionValue}"
                     >
                       <option
@@ -156,6 +158,7 @@
                       v-model="artContributionValue"
                       type="number"
                       placeholder="введите сумму"
+                      class="input-window"
                       :class="{'error': !!activeArtContributionType && !artContributionValue}"
                     > евро
                   </div>
@@ -170,76 +173,79 @@
                   и организацией продажи произведения. Поэтому произведение в 300 евро это 10 пьетр.  
                 </i>
               </p>
-              <div
-                v-if="days && persons"
-                class="calculator__inputs__block"
-              >
-                <h3
-                  class="calculator__inputs__block-title"
-                  :class="{error: isOkayWithDailyContribution === null}"
-                >
-                  Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
-                </h3>
-                <div class="calculator__inputs__daily-contribution-option">
-                  <input
-                    id="acceptDailyContribution"
-                    v-model="isOkayWithDailyContribution"
-                    type="radio"
-                    class="calculator__inputs__contribution-option__radio-button"
-                    name="dailyContribution"
-                    :value="true"
-                  >
-                  <label for="acceptDailyContribution">
-                    Не проблема, внесу наличными в день приезда <strong>{{ 20*persons*days }} евро</strong> за весь период
-                  </label>
-                </div>
-                <div class="calculator__inputs__daily-contribution-option">
-                  <input
-                    id="declineDailyContribution"
-                    v-model="isOkayWithDailyContribution"
-                    type="radio"
-                    class="calculator__inputs__contribution-option__radio-button"
-                    name="dailyContribution"
-                    :value="false"
-                  >
-                  <label for="declineDailyContribution">
-                    У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
-                  </label>
-                </div>
-              </div>
             </li>
           </ul>
-          <div
-            class="calculator__inputs__block"
+        </div>
+        <div
+          v-if="days && persons"
+          class="calculator__inputs__block"
+        >
+          <h3
+            class="calculator__inputs__block-title"
+            :class="{error: isOkayWithDailyContribution === null}"
           >
-            <div>
-              <b>
-                <label fpr="result">
-                  Вот такой вот результат:
-                </label>
-                <p
-                  v-if="!!getCalculationResult() && getCalculationResult() !== NaN && getCalculationResult() !== 'NaN' && isOkayWithDailyContribution !== null"
-                  id="result"
-                  :class="{
-                    error: getCalculationResult() < 0,
-                    green: getCalculationResult() >= 0
-                  }"
-                >
-                  {{ Math.abs(getCalculationResult()) }}
-                </p>
-                <p
-                  v-else
-                  id="result"
-                >Заполните обязательные поля</p>
-              </b>
+            Готовы ли вы наряду с остальными резидентами вносить наличными<br>по 20 евро в день на еду и другие неизбежные расходы?
+          </h3>
+          <div>
+            <div class="calculator__inputs__daily-contribution-option">
+              <input
+                id="acceptDailyContribution"
+                v-model="isOkayWithDailyContribution"
+                type="radio"
+                class="calculator__inputs__contribution-option__radio-button"
+                name="dailyContribution"
+                :value="true"
+              >
+              <label for="acceptDailyContribution">
+                Не проблема, внесу наличными в день приезда <strong>{{ 20*persons*days }} евро</strong> за весь период
+              </label>
             </div>
-            <p>
-              <i>
-                Если здесь меньше нуля — значит пьетр хватает, если больше — значит не хватает.<br>
-                Потом сделаем правильную надпись, сейчас пока оставил так, чтобы ты смог проверить.
-              </i>
-            </p>
+            <div class="calculator__inputs__daily-contribution-option">
+              <input
+                id="declineDailyContribution"
+                v-model="isOkayWithDailyContribution"
+                type="radio"
+                class="calculator__inputs__contribution-option__radio-button"
+                name="dailyContribution"
+                :value="false"
+              >
+              <label for="declineDailyContribution">
+                У меня финансовые трудности, предпочитаю компенсировать эту сумму трудом или творчеством 
+              </label>
+            </div>
           </div>
+        </div>
+        <div
+          class="calculator__inputs__block"
+        >
+          <div>
+            <b>
+              <label fpr="result">
+                Вот такой вот результат:
+              </label>
+              <p
+                v-if="!!getCalculationResult() && getCalculationResult() !== NaN && getCalculationResult() !== 'NaN' && isOkayWithDailyContribution !== null"
+                id="result"
+                :class="{
+                  error: getCalculationResult() < 0,
+                  green: getCalculationResult() >= 0
+                }"
+              >
+                {{ Math.abs(getCalculationResult()) }}
+              </p>
+              <p
+                v-else
+                id="result"
+                class="error"
+              >Заполните обязательные поля</p>
+            </b>
+          </div>
+          <p>
+            <i>
+              Если здесь меньше нуля — значит пьетр хватает, если больше — значит не хватает.<br>
+              Потом сделаем правильную надпись, сейчас пока оставил так, чтобы ты смог проверить.
+            </i>
+          </p>
         </div>
       </div>
     </div>
