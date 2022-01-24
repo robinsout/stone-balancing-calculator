@@ -107,3 +107,10 @@ li {
 a {
   color: #42b983;
 }
+
+option {
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: normal !important;
+  white-space: normal;
+}

@@ -27,7 +27,7 @@ export default defineComponent({
             artContributionValue.value/30 || 0
           )
           
-        // D*R+2PND — (X/10 + Y + A/30 + B/20 + C/20)
+        // D*R + 2PND — (X/10 + Y + A/30 + B/20 + C/20)
         : days.value *
           conditionsValue.value +
           2 * persons.value * days.value -
