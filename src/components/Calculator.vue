@@ -208,16 +208,24 @@
         <label fpr="result">
           Вот такой вот результат:
         </label>
-        <p
-          v-if="!!getCalculationResult() && getCalculationResult() !== NaN && getCalculationResult() !== 'NaN' && isOkayWithDailyContribution !== null"
-          id="result"
-          :class="{
-            error: getCalculationResult() < 0,
-            green: getCalculationResult() >= 0
-          }"
-        >
-          {{ Math.abs(getCalculationResult()) }}
-        </p>
+        <div v-if="!!getCalculationResult() && getCalculationResult() !== NaN && getCalculationResult() !== 'NaN' && isOkayWithDailyContribution !== null">
+          <p
+            id="result"
+            :class="{
+              error: getCalculationResult() >= 0,
+              green: getCalculationResult() < 0
+            }"
+          >
+            {{ Math.abs(getCalculationResult()) }}
+          </p>
+          <p>Вот так мы это насчитали:</p>
+          <p v-if="isOkayWithDailyContribution">
+            {{ `${days}*${conditionsValue} – (${money/10 || 0} + ${labourHours || 0} + ${artContributionValue/30 || 0})` }}
+          </p>
+          <p v-if="!isOkayWithDailyContribution">
+            {{ `${days}*${conditionsValue} + 2*${persons}*${days} – (${money/10 || 0} + ${labourHours || 0} + ${artContributionValue/30 || 0})` }}
+          </p>
+        </div>
         <p
           v-else
           id="result"

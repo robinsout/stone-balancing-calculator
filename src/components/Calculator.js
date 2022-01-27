@@ -22,9 +22,9 @@ export default defineComponent({
         ? days.value *
           conditionsValue.value -
           (
-            money.value/10 || 0 +
-            labourHours.value || 0 +
-            artContributionValue.value/30 || 0
+            (money.value/10 || 0) +
+            (labourHours.value || 0) +
+            (artContributionValue.value/30 || 0)
           )
           
         // D*R + 2PND — (X/10 + Y + A/30 + B/20 + C/20)
@@ -37,7 +37,7 @@ export default defineComponent({
             artContributionValue.value/30 || 0
           );
 
-      return Number(result).toFixed();
+      return Number(result).toFixed(1);
     }
 
     return {
